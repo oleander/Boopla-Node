@@ -3,10 +3,14 @@
     <script src="jquery-1.2.6.min.js"></script>
     <script src="json.js"></script>
     <script>
+      
+      /* Vi behöver en funktion för att ta emot informationen från JSONP-requesten */
+      var send = function(data){}
+      
       $(document).ready(function(){
         /* Testdata */
         var data = JSON.stringify([{name:"Peter",age:40},{name:"Mary",age:20}]);
-  
+        
         $.ajax({
            url: "http://node.localhost:8000/send?data=" + escape(data), 
            dataType: 'jsonp'
