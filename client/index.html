@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <script src="jquery-1.2.6.min.js"></script>
+    <script>
+      var receive = function(data){
+        if(data){
+          console.debug(data.messages.data);
+        }
+  
+        jsonp("receive");
+      }
+
+      /* Hämtar hem angiven länk och kickar igång angivet callback */
+      function jsonp(params){
+        $.ajax({
+          url: "http://node.localhost:8000/" + params, 
+          dataType: 'jsonp'
+        });
+      }
+
+      $(document).ready(function()
+      {
+        /* Startar i gång all */
+        receive();
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

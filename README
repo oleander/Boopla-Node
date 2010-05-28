@@ -1,0 +1,7 @@
+Kör:
+$ /usr/local/bin/node server.js
+För att starta igång scriptet
+
+På klientsidan så behövs index.html-filen som följer med
+send.html simulerar en server som kan skicka data till klienten
+Allt detta ligger i client-mappen
