@@ -11,7 +11,7 @@ Array.prototype.in_array = function(p_val) {
 		}
 	}
 	return false;
-}
+};
 
 /* Retunerar en unix-time-stamp i sekunder */
 function getTimeStamp(){
