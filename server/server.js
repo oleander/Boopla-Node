@@ -80,8 +80,20 @@ fu.get("/send", function (req, res) {
 	/* Tar in en sträng i form av en stringifierad JSON-sträng */
 	var data = qs.parse(url.parse(req.url).query).data;
 	
+	/* Vi testar att konvertera strängen till ett objekt */
+	try{
+		data = eval("(" + data + ")");
+	}
+	catch(e){
+		sys.debug("Fel indata");
+		sys.debug(data);
+		sys.debug(e);
+		res.simpleJSON(200, { status: "ERROR" });
+		return;
+	}
+	
 	/* Skickar ut datan till användaren */
-	channel.appendMessage(eval(data));
+	channel.appendMessage(data);
 	
 	/* Svarar servern med valfri information,
 	   Då ingen kommer läsa informationen så kan vi lika 
