@@ -3,6 +3,16 @@
 HOST = 'node.localhost';
 PORT = 8000;
 
+/* PHP:s motsvarighet till in_array() */
+Array.prototype.in_array = function(p_val) {
+	for(var i = 0, l = this.length; i < l; i++) {
+		if(this[i] == p_val) {
+			return true;
+		}
+	}
+	return false;
+}
+
 /* Retunerar en unix-time-stamp i sekunder */
 function getTimeStamp(){
   return Math.round(new Date().getTime()/1000.0);
@@ -25,19 +35,35 @@ var channel = new function (){
 		var m = {data: data};
     for (var i in callbacks){
 			if(callbacks.hasOwnProperty(i)){
-				/* Skickar iväg informationen */
-				callbacks[i].callback(m);
+				/* Om användaren inte har gjort några inställningar alls, 
+				   a.k.a null så hoppar vi vidare */
+				if(callbacks[i].channels == 'null'){
+					continue;
+				}
 				
-				/* Plockar bort callbacken så att vi inte 
-				   skickar samma data flera gånger */
-				delete callbacks[i];
+				/* Vi skickar bara ett meddelande till användaren om 
+				   personen i fråga har kanalen i sin inställningar */
+				if(callbacks[i].channels.in_array(data.channel[0].id)){
+					/* Skickar iväg informationen */
+					callbacks[i].callback(m);
+					
+					/* Plockar bort callbacken så att vi inte 
+					   skickar samma data flera gånger */
+					delete callbacks[i];
+				}
 			}
 		}
   };
 
 	/* Den här sparar callback:en för ansluten användare */
-	this.query = function (callback){
-		callbacks.push({ callback: callback, time: getTimeStamp() });
+	this.query = function (channels, callback){
+		/* Ingående värde från klienten är alltid en sträng med alla cid te.x
+		   1,2,3,45,8 
+		   Om inte ingående värde är tomt så gör vi om det till en array */
+		if(channels){
+			channels = channels.split(',');
+		}
+		callbacks.push({ callback: callback, time: getTimeStamp(), channels: channels});
   };
 };
 
@@ -69,7 +95,9 @@ fu.listen(PORT, HOST);
    Inga ingående argument behövs från användaren 
    då alla användare tar emot samma data... */
 fu.get("/receive", function(req, res){
-	channel.query(function (data){
+	var channels = qs.parse(url.parse(req.url).query).channels;
+	
+	channel.query(channels,function (data){
 		res.simpleJSON(200, { messages: data }, "receive");
 	});
 });
