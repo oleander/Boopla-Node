@@ -106,7 +106,16 @@ fu.get("/receive", function(req, res){
    Någon slags lösenord borde kanske skickas med, men de kan fixas vid senare tillfälle */
 fu.get("/send", function (req, res) {
 	/* Tar in en sträng i form av en stringifierad JSON-sträng */
-	var data = qs.parse(url.parse(req.url).query).data;
+	try{
+		var data = qs.parse(url.parse(req.url).query).data;
+	}
+	catch(e){
+		sys.debug('Fel 1');
+		sys.debug(e)
+		sys.debug(data)
+		res.simpleJSON(200, { status: "ERROR" });
+		return;
+	}
 	
 	/* Vi testar att konvertera strängen till ett objekt */
 	try{
