@@ -26,6 +26,10 @@ var fu = require("./fu"),
     url = require("url"),
     qs = require("querystring");
 
+fu.get("/", fu.staticHandler("index.html"));
+fu.get("/client.js", fu.staticHandler("client.js"));
+fu.get("/jquery-1.4.2.min.js", fu.staticHandler("jquery-1.4.2.min.js"));
+		
 /* Variabeln kommer att innehålla alla callbacks som ska aktiveras 
    när data finns att skicka ut till användaren */
 var callbacks = [];
@@ -33,11 +37,17 @@ var channel = new function (){
 	/* Skickar ut data till alla användare som är inloggade på servern */
 	this.appendMessage = function (data){
 		var m = {data: data};
+		
+		/* Om inga användare finns ansluta så avbryter vi*/
+		if(callbacks.length === 0){
+			return;
+		}
+		
     for (var i in callbacks){
 			if(callbacks.hasOwnProperty(i)){
 				/* Om användaren inte har gjort några inställningar alls, 
-				   a.k.a null så hoppar vi vidare */
-				if(callbacks[i].channels == 'null'){
+				   a.k.a null så hoppar vi vidare, eller om fel data skickas från servern */
+				if(callbacks[i].channels == 'null' || callbacks[i].channels === undefined || data.channel === undefined){
 					continue;
 				}
 				
@@ -98,7 +108,7 @@ fu.get("/receive", function(req, res){
 	var channels = qs.parse(url.parse(req.url).query).channels;
 	
 	channel.query(channels,function (data){
-		res.simpleJSON(200, { messages: data }, "receive");
+		res.simpleJSON(200, { messages: data });
 	});
 });
 
