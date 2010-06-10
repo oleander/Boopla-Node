@@ -20,18 +20,20 @@ var channels = $.getUrlVar('channels');
 /* Hämtar hem angiven länk och kickar igång angivet callback */
 function receive(){
   $.ajax({
-		type: 'GET',
-		data: {channels: channels},
+    type: 'GET',
+    data: {channels: channels},
     url: "/receive",
-		dataType: 'json',
+    dataType: 'json',
     success: function(data){
-		
-		receive();
-		}
+      if(data.messages.data != 'timeout'){
+        var popup = top.window;
+        popup.postMessage(JSON.stringify(data.messages.data), "http://localhost");
+      }
+      receive();
+    }
   });
 }
 
-$('body',top.document).html('apa')
 $(document).ready(function()
 {
   /* Startar i gång all */

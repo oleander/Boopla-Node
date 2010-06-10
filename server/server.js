@@ -29,7 +29,8 @@ var fu = require("./fu"),
 fu.get("/", fu.staticHandler("index.html"));
 fu.get("/client.js", fu.staticHandler("client.js"));
 fu.get("/jquery-1.4.2.min.js", fu.staticHandler("jquery-1.4.2.min.js"));
-		
+fu.get("/json.js", fu.staticHandler("json.js"));
+
 /* Variabeln kommer att innehålla alla callbacks som ska aktiveras 
    när data finns att skicka ut till användaren */
 var callbacks = [];
