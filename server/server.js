@@ -77,7 +77,9 @@ var channel = new function (){
 		  try{
 		    channels = channels.split(',');
 		  }
-		  catch(e){}
+		  catch(e){
+		    channels = [channels];
+		  }
 		}
 		callbacks.push({ callback: callback, time: getTimeStamp(), channels: channels});
   };
