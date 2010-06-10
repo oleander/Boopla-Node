@@ -25,7 +25,7 @@ function receive(){
     url: "/receive",
     dataType: 'json',
     success: function(data){
-      if(data.messages.data != 'timeout'){
+      if(data && data.messages.data != 'timeout'){
         var popup = top.window;
         popup.postMessage(JSON.stringify(data.messages.data), "http://localhost");
       }
