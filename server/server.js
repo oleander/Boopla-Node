@@ -72,7 +72,12 @@ var channel = new function (){
 		   1,2,3,45,8 
 		   Om inte ingående värde är tomt så gör vi om det till en array */
 		if(channels){
-			channels = channels.split(',');
+		  
+		  /* Om channels-variabeln bara innehåller ett id så fungerar inte split */
+		  try{
+		    channels = channels.split(',');
+		  }
+		  catch(e){}
 		}
 		callbacks.push({ callback: callback, time: getTimeStamp(), channels: channels});
   };
